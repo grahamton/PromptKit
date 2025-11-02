@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "promptkit"
+version = "0.0.1"
+description = "Prompt System Diagnostics Framework (explain-first; deterministic Iterate Cards)"
+authors = [{name = "PromptKit"}]
+requires-python = ">=3.9"
+readme = "README.md"
+
+dependencies = [
+  "typer>=0.9",
+]
+
+[tool.setuptools]
+packages = ["promptkit"]
+package-dir = {"" = "src"}
+
+[project.scripts]
+promptkit = "promptkit.cli:app"
+
+[project.optional-dependencies]
+dev = [
+  "black>=23.7.0",
+  "ruff>=0.3.0",
+  "pytest>=7.4",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py39", "py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py39"
+select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

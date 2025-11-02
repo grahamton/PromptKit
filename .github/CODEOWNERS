@@ -1,0 +1,5 @@
+# Default owner for entire repo
+* @grahamton
+
+# Optionally, narrow ownership later per folder
+# src/promptkit/ @grahamton

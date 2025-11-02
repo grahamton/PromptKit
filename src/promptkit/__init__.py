@@ -1,0 +1,7 @@
+"""PromptKit: Prompt System Diagnostics Framework (explain-first; deterministic Iterate Cards)."""
+
+__all__ = [
+    "__version__",
+]
+
+__version__ = "0.0.1"
