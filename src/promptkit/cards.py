@@ -161,6 +161,10 @@ def build_constraint_ledger(seed: str, friction: str) -> IterateCard:
         examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Keep recaps under two lines; avoid restating rules",
+            "Use section headers to enforce output shape",
+        ],
     )
 
 
@@ -200,6 +204,10 @@ def build_contrastive_clarify(seed: str, friction: str) -> IterateCard:
         examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Use domain-specific contrasts; avoid stacking clarifiers",
+            "Reflect the chosen meaning before next step",
+        ],
     )
 
 
@@ -239,6 +247,10 @@ def build_exemplar_propose(seed: str, friction: str) -> IterateCard:
         examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Keep options to 3-4 traits; avoid long paragraphs",
+            "Ensure both options respect captured constraints",
+        ],
     )
 
 
@@ -278,6 +290,10 @@ def build_override_hook(seed: str, friction: str) -> IterateCard:
         examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Update state atomically and echo succinctly",
+            "Confirm before switching confirmed=false -> true",
+        ],
     )
 
 
@@ -323,6 +339,10 @@ def build_state_bag(seed: str, friction: str) -> IterateCard:
         examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Ask only for missing fields; never re-ask captured",
+            "Echo a concise summary for confirmation",
+        ],
     )
 
 
@@ -364,6 +384,10 @@ def build_slot_filling(seed: str, friction: str) -> IterateCard:
         examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Keep commands short; echo applied override",
+            "Ensure proposals respect active overrides and ledger",
+        ],
     )
 
 
@@ -426,6 +450,9 @@ def make_iterate_card(
                         nxt.validation_scenarios,
                     )
                     base.validation_pass = _merge_unique(base.validation_pass, nxt.validation_pass)
+                    base.model_considerations = _merge_unique(
+                        base.model_considerations, nxt.model_considerations
+                    )
                 base.id = "Combined: " + " + ".join(keys)
                 card = base
             else:
@@ -539,5 +566,6 @@ def make_iterate_card(
         card.examples = _norm(card.examples)
         card.validation_scenarios = _norm(card.validation_scenarios)
         card.validation_pass = _norm(card.validation_pass)
+        card.model_considerations = _norm(card.model_considerations)
 
     return card
