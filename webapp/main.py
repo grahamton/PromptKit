@@ -59,8 +59,14 @@ def index(request: Request, preset: Optional[str] = None) -> HTMLResponse:
         friction = "It frequently gets stuck on a rug and starts yelling about the futility of its task in all caps, scaring the cat."
         pattern = "override-hook"
     elif preset == "weather":
-        seed = "The Sarcastic Weather Man delivers accurate but extremely passive-aggressive local forecasts."
-        friction = "When it rains, it suggests the user stay home and contemplate their life choices, and refuses to give an actual rain start time."
+        seed = (
+            "The Sarcastic Weather Man delivers accurate but extremely passive-"
+            "aggressive local forecasts."
+        )
+        friction = (
+            "When it rains, it suggests the user stay home and contemplate their life "
+            "choices, and refuses to give an actual rain start time."
+        )
         pattern = "exemplar-propose"
     elif preset == "travelmate":
         seed = "TravelMate planner helps design 7-day city trips based on vibe and budget."

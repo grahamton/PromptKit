@@ -269,7 +269,8 @@ def build_forced_diversification(seed: str, friction: str) -> IterateCard:
         "If <3 interests found, infer proxies and state assumptions",
     ]
     prompt_patch = [
-        '"Extract a minimum of three distinct interests outside the dominant domain. Classify them by life domain (hobbies, aesthetics, media, values, profession) and list them explicitly."',
+        '"Extract a minimum of three distinct interests outside the dominant domain."',
+        '"Classify them by life domain (hobbies, aesthetics, media, values, profession) and list them explicitly."',
         '"Then produce exactly two recommendations:"',
         '"1) Balanced Option - combine the primary domain motif with one selected non-domain interest."',
         '"2) Novelty Option - primarily showcase one non-domain interest; keep the primary motif minimal."',
