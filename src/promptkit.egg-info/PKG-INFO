@@ -1,15 +1,41 @@
 Metadata-Version: 2.4
 Name: promptkit
-Version: 0.0.1
+Version: 0.0.2
 Summary: Prompt System Diagnostics Framework (explain-first; deterministic Iterate Cards)
 Author: PromptKit
+License: MIT License
+        
+        Copyright (c) 2025 PromptKit
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+        
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
-Requires-Dist: typer>=0.9
+License-File: LICENSE
+Requires-Dist: click==8.1.7
+Requires-Dist: typer==0.12.5
 Provides-Extra: dev
-Requires-Dist: black>=23.7.0; extra == "dev"
-Requires-Dist: ruff>=0.3.0; extra == "dev"
-Requires-Dist: pytest>=7.4; extra == "dev"
+Requires-Dist: black==24.8.0; extra == "dev"
+Requires-Dist: ruff==0.6.9; extra == "dev"
+Requires-Dist: pytest==8.3.3; extra == "dev"
+Dynamic: license-file
 
 ﻿# PromptKit
 
@@ -46,6 +72,20 @@ PromptKit helps you improve prompts by explaining why each change is made. For p
 ## Install
 - Editable install (recommended):
   - `python -m pip install -e .`
+
+## Developer Quickstart
+- Install dev tools: `python -m pip install -e .[dev]`
+- Lint: `ruff check .`
+- Format check: `black --check .` (format with `black .`)
+- Tests: `pytest -q`
+- Run CLI locally:
+  - `promptkit plan --seed "demo" --friction "demo" --ascii`
+  - `promptkit ticket --seed "demo" --friction "demo" --ascii`
+  - `promptkit iterate --seed "demo" --friction "demo" --ascii`
+
+## CI
+- GitHub Actions runs on push and PR: ruff, black --check, pytest.
+- Protect `main` by requiring the CI job to pass (Settings → Branches).
 
 ## Web App (Optional UI)
 - Run locally:
@@ -93,6 +133,8 @@ Print a filled PromptKit ticket to frame work quickly.
 - override-hook: Simple staff commands (override/lock/reduce/reset); apply immediately and echo.
 - state-bag: Keep explicit state (goal/include/avoid/not_too/memory/next_step/confirmed); echo updates; confirm before finalizing.
 - slot-filling: Ask only for missing required fields; echo and confirm summary before actions.
+
+Advisory: pattern outputs include a short "Model considerations" section (guidance only) to help keep rules atomic, echoed succinctly, and consistently placed.
 
 See also: Why These Patterns? (run the UI at `http://localhost:8000` and open `/research`).
 

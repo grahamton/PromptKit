@@ -23,13 +23,16 @@ Examples
 ## How to ask a teammate to run it
 Share your Seed and Friction and ask them to run one of these and send you the result.
 
-Iterate Card (choose a pattern if you like)
+Iterate Card (choose a pattern if you like; or type `auto`)
 - constraint-ledger: keeps a running list of user constraints; avoids contradictions.
 - contrastive-clarify: one either/or question to pin down an ambiguous term.
 - exemplar-propose: two tiny concrete options that both fit the constraints.
 - override-hook: simple staff commands (override/lock/reduce/reset) that apply immediately.
+ - forced-diversification: extracts 3+ non-primary interests and offers Balanced/Novelty options to counter feed/echo bias.
 
 Command examples (your teammate runs these):
+- Iterate Card (auto)
+  - promptkit iterate --seed "SnackSmith flavor assistant helps build custom snacks from natural-language taste descriptions." --friction "Misinterprets adjectives; mixes mismatched flavors; lacks constraints memory; no fast staff override." --pattern auto --ascii
 - Iterate Card (constraint-ledger)
   - promptkit iterate --seed "SnackSmith flavor assistant helps build custom snacks from natural-language taste descriptions." --friction "Misinterprets adjectives; mixes mismatched flavors; lacks constraints memory; no fast staff override." --pattern constraint-ledger --ascii
 - Plan
@@ -47,4 +50,3 @@ Command examples (your teammate runs these):
 - Keep Seed and Friction to one sentence each.
 - Prefer plain language ("repeats apologies; never confirms done") over technical jargon.
 - If your team can't run commands, just share Seed and Friction and ask for an Iterate Card back.
-

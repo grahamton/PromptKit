@@ -1,3 +1,4 @@
+LICENSE
 README.md
 pyproject.toml
 src/promptkit/__init__.py
@@ -11,5 +12,9 @@ src/promptkit.egg-info/dependency_links.txt
 src/promptkit.egg-info/entry_points.txt
 src/promptkit.egg-info/requires.txt
 src/promptkit.egg-info/top_level.txt
+tests/test_ascii_snapshots.py
 tests/test_cli_smoke.py
 tests/test_core_ascii.py
+tests/test_webapp_htmx.py
+tests/test_webapp_pages.py
+tests/test_webapp_smoke.py

@@ -69,8 +69,126 @@ Interactive Loop
 Artifacts
 - `plan_state.json` - tracks session state, model settings, last rule.
 - `ruleset.md` - cumulative list of rules with short rationales.
-- `tests.yaml` - stores validation inputs and expectations.
-
-CLI Commands (planned)
-- TBD
-
+  - `tests.yaml` - stores validation inputs and expectations.
+  
+  CLI Commands (planned)
+  - TBD
+  
+ # 🧩 PromptKit Enhancement Plan — Codex Agent Task Board
+ 
+ ## 🎯 Objective
+ 
+ Make PromptKit easier to use for non-technical people while tightening its internal structure for maintainability.
+ 
+ ---
+ 
+ ## 🪶 Primary Goals
+ 
+ * **Simplify modes:** merge *Plan* + *Ticket* into one clean format.
+ * **Human-first UX:** rename *Iterate* to something friendly like *Fix*.
+ * **Centralize utilities:** move shared helpers into a single module.
+ * **Data-driven patterns:** store rules and examples in YAML/JSON.
+ * **Improve documentation:** short, plain-English guides and tutorials.
+ * **Establish reliability:** add version-pinned dependencies, license, and tests.
+ 
+ ---
+ 
+ ## 🧱 Task Breakdown
+ 
+ ### 1. Cleanup & Infrastructure  *(Week 1)*
+ 
+ **Tasks**
+ 
+ * [ ] Pin dependency versions in `pyproject.toml` and `requirements.txt`.
+ * [ ] Add an MIT or Apache-2.0 license.
+ * [ ] Consolidate helper functions into `promptkit/utils/`.
+ * [ ] Add lint + test workflow in GitHub Actions.
+ 
+ **Codex Focus**
+ 
+ ```yaml
+ codex_task: cleanup_infra
+ intent: "stabilize project foundation"
+ expected_result: "reliable builds and consistent environment"
+ ```
+ 
+ ---
+ 
+ ### 2. Unified Mode & Naming  *(Weeks 2 – 3)*
+ 
+ **Tasks**
+ 
+ * [ ] Merge Plan + Ticket output pipelines.
+ * [ ] Rename Iterate to Fix (or Card) in CLI and UI.
+ * [ ] Update docs and webapp templates accordingly.
+ 
+ **Codex Focus**
+ 
+ ```yaml
+ codex_task: unify_modes
+ intent: "simplify user experience"
+ expected_result: "single unified report: context → diagnosis → fix → handoff"
+ ```
+ 
+ ---
+ 
+ ### 3. Data-Driven Patterns  *(Weeks 4 – 5)*
+ 
+ **Tasks**
+ 
+ * [ ] Extract pattern definitions into YAML files.
+ * [ ] Build a loader and schema validator.
+ * [ ] Ensure CLI + webapp can dynamically list available patterns.
+ 
+ **Codex Focus**
+ 
+ ```yaml
+ codex_task: refactor_patterns
+ intent: "make patterns editable without code"
+ expected_result: "patterns autoloaded from YAML"
+ ```
+ 
+ ---
+ 
+ ### 4. Documentation & Tutorials  *(Week 6)*
+ 
+ **Tasks**
+ 
+ * [ ] Create short “How to Fix a Prompt” tutorial.
+ * [ ] Add contributor guide and architecture overview.
+ * [ ] Include screenshots and example sessions.
+ 
+ **Codex Focus**
+ 
+ ```yaml
+ codex_task: write_docs
+ intent: "make onboarding easy for non-technical users"
+ expected_result: "plain-language docs visible in README and webapp help"
+ ```
+ 
+ ---
+ 
+ ### 5. Testing & Validation  *(Ongoing)*
+ 
+ **Tasks**
+ 
+ * [ ] Add unit tests for CLI commands and FastAPI routes.
+ * [ ] Include snapshot tests for sample Iterate/Fix Cards.
+ * [ ] Track coverage > 80%.
+ 
+ **Codex Focus**
+ 
+ ```yaml
+ codex_task: implement_tests
+ intent: "ensure deterministic output and prevent regressions"
+ expected_result: "green CI pipeline with reproducible runs"
+ ```
+ 
+ ---
+ 
+ ### ✅ Definition of Done
+ 
+ * All modes unified under a single interface.
+ * Dependencies and licenses set.
+ * Docs published → non-technical users can self-serve.
+ * Basic test coverage with CI passing.
