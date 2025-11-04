@@ -22,4 +22,3 @@ def test_iterate_ascii_snapshot_minimal():
     assert out.startswith("Iterate Card")
     assert "- Prompt patch (drop-in)" in out
     assert "- Where to place in your prompt" in out
-
