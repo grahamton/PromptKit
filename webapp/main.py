@@ -66,9 +66,9 @@ def index(request: Request, preset: Optional[str] = None) -> HTMLResponse:
     flags_str = ",".join([k for k, v in flags.items() if v])
 
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "form_defaults": {
                 "seed": seed,
                 "friction": friction,
@@ -87,18 +87,12 @@ def index(request: Request, preset: Optional[str] = None) -> HTMLResponse:
 
 @app.get("/research", response_class=HTMLResponse)
 def research(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(
-        "research.html",
-        {"request": request},
-    )
+    return templates.TemplateResponse(request, "research.html", {})
 
 
 @app.get("/modes", response_class=HTMLResponse)
 def modes(request: Request) -> HTMLResponse:
-    return templates.TemplateResponse(
-        "modes.html",
-        {"request": request},
-    )
+    return templates.TemplateResponse(request, "modes.html", {})
 
 
 @app.post("/run", response_class=HTMLResponse)
@@ -126,12 +120,14 @@ def run(
         # If it's an HTMX request, return only the fragment. Otherwise return full page.
         if request.headers.get("HX-Request"):
             return templates.TemplateResponse(
-                "_output.html", {"request": request, "errors": errors, "result": None}
+                request,
+                "_output.html",
+                {"errors": errors, "result": None},
             )
         return templates.TemplateResponse(
+            request,
             "index.html",
             {
-                "request": request,
                 "form_defaults": {
                     "seed": seed,
                     "friction": friction,
@@ -191,9 +187,9 @@ def run(
 
     if request.headers.get("HX-Request"):
         return templates.TemplateResponse(
+            request,
             "_output.html",
             {
-                "request": request,
                 "errors": None,
                 "result": payload,
                 "inputs": {
@@ -210,9 +206,9 @@ def run(
         )
     # Non-HTMX fallback: render full page with output embedded
     return templates.TemplateResponse(
+        request,
         "index.html",
         {
-            "request": request,
             "form_defaults": {
                 "seed": seed,
                 "friction": friction,
