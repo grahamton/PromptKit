@@ -13,8 +13,8 @@ from .ticket import build_ticket_text
 
 app = typer.Typer(
     help=(
-        "PromptKit: Prompt System Diagnostics Framework — stop guessing; "
-        "diagnose and standardize fixes."
+        "PromptKit: Prompt System Diagnostics Framework — stop guessing; diagnose and standardize fixes. "
+        "Outputs include Human summary, placement, and advisory model considerations."
     )
 )
 
@@ -33,7 +33,7 @@ def iterate(
     ascii_only: bool = typer.Option(False, "--ascii", help="Emit ASCII-only output"),
     json_out: bool = typer.Option(False, "--json", help="Return machine-readable JSON"),
 ) -> None:
-    """Generate a single iterate card (Diagnosis -> Fix -> Validation)."""
+    """Generate an Iterate Card (Diagnosis -> Fix -> Validation; includes Human summary, placement, and Model considerations)."""
 
     card = make_iterate_card(seed, friction, ascii_only=ascii_only, pattern=pattern)
     if json_out:
