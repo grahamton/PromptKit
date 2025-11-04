@@ -12,4 +12,3 @@ def test_build_ticket_text_ascii():
     out = build_ticket_text(seed="s", friction="f", ascii_only=True)
     assert isinstance(out, str)
     assert "Success Criteria:" in out
-

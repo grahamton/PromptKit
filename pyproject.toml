@@ -9,9 +9,11 @@ description = "Prompt System Diagnostics Framework (explain-first; deterministic
 authors = [{name = "PromptKit"}]
 requires-python = ">=3.9"
 readme = "README.md"
+license = { file = "LICENSE" }
 
 dependencies = [
-  "typer>=0.9",
+  "click==8.1.7",
+  "typer==0.12.5",
 ]
 
 [tool.setuptools]
@@ -23,9 +25,9 @@ promptkit = "promptkit.cli:app"
 
 [project.optional-dependencies]
 dev = [
-  "black>=23.7.0",
-  "ruff>=0.3.0",
-  "pytest>=7.4",
+  "black==24.8.0",
+  "ruff==0.6.9",
+  "pytest==8.3.3",
 ]
 
 [tool.black]
@@ -35,7 +37,10 @@ target-version = ["py39", "py310", "py311", "py312"]
 [tool.ruff]
 line-length = 100
 target-version = "py39"
-select = ["E", "F", "W", "I", "UP", "B"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B"]
+ignore = ["E501", "B008"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
