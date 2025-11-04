@@ -461,6 +461,7 @@ def make_iterate_card(
             card = None
     else:
         card = None
+    extra_considerations: list[str] = []
 
     if card is None and _matches_close_loop(friction):
         id_ = "Close-The-Loop Control"
@@ -498,6 +499,10 @@ def make_iterate_card(
             "Contains explicit confirmation and final recap",
             "Turns to resolution decrease or stay flat vs baseline",
         ]
+        extra_considerations = [
+            "Limit apologies; avoid repeated questions",
+            "Confirm resolution explicitly; recap next step",
+        ]
     elif card is None:
         id_ = "Smart Info Capture"
         diagnosis = [
@@ -530,6 +535,10 @@ def make_iterate_card(
             "Single recap + confirmation before next step",
             "Lower average turns vs baseline",
         ]
+        extra_considerations = [
+            "Ask only for missing fields; avoid repeats",
+            "Summarize captured info before proceeding",
+        ]
 
     # Prepare the final card object if not chosen earlier
     if card is None:
@@ -543,6 +552,7 @@ def make_iterate_card(
             examples=examples,
             validation_scenarios=validation_scenarios,
             validation_pass=validation_pass,
+            model_considerations=extra_considerations,
         )
 
     # ASCII safety: normalize dashes if requested
