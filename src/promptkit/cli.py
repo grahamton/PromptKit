@@ -27,7 +27,8 @@ def iterate(
         None,
         help=(
             "Optional pattern(s): constraint-ledger | contrastive-clarify | exemplar-propose | "
-            "override-hook | state-bag | slot-filling (comma-separated to combine)"
+            "override-hook | state-bag | slot-filling | forced-diversification | "
+            "auto | auto-remote (comma-separated to combine where applicable)"
         ),
     ),
     ascii_only: bool = typer.Option(False, "--ascii", help="Emit ASCII-only output"),

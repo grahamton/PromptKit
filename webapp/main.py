@@ -15,6 +15,24 @@ from .services.promptkit_service import run_promptkit
 app = FastAPI(title="PromptKit – Diagnostics Web")
 
 templates = Jinja2Templates(directory="webapp/templates")
+try:
+    from markdown_it import MarkdownIt  # type: ignore
+    from markupsafe import Markup
+
+    _md = MarkdownIt()
+
+    def _markdown_filter(text: str | None) -> Markup:
+        html = _md.render((text or "").strip())
+        return Markup(html)
+
+except Exception:  # pragma: no cover
+    from markupsafe import Markup, escape
+
+    def _markdown_filter(text: str | None) -> Markup:
+        # Safe fallback: present as preformatted text
+        return Markup(f'<pre class="code">{escape(text or "")}</pre>')
+
+templates.env.filters["markdown"] = _markdown_filter
 app.mount("/static", StaticFiles(directory="webapp/static"), name="static")
 
 

@@ -72,7 +72,7 @@
   </div>
 
   <h3>Text</h3>
-  <pre class="code">{{ result.text }}</pre>
+  <div class="md">{{ result.text | markdown }}</div>
 
   {% if result.json %}
   <h3>JSON</h3>
