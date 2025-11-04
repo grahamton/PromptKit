@@ -1,8 +1,8 @@
 """Typer CLI for PromptKit diagnostics (MVP)."""
+
 from __future__ import annotations
 
 import json
-from typing import Optional
 
 import typer
 
@@ -11,18 +11,29 @@ from .plan import build_plan_text
 from .ticket import build_ticket_text
 
 
-app = typer.Typer(help="PromptKit: Prompt System Diagnostics Framework — stop guessing; diagnose and standardize fixes.")
+app = typer.Typer(
+    help=(
+        "PromptKit: Prompt System Diagnostics Framework — stop guessing; diagnose and standardize fixes. "
+        "Outputs include Human summary, placement, and advisory model considerations."
+    )
+)
 
 
 @app.command()
 def iterate(
     seed: str = typer.Option(..., help="One-line seed (role + goal)"),
     friction: str = typer.Option(..., help="Biggest current friction/failure"),
-    pattern: str = typer.Option(None, help="Optional pattern(s): constraint-ledger | contrastive-clarify | exemplar-propose | override-hook | state-bag | slot-filling (comma-separated to combine)"),
+    pattern: str = typer.Option(
+        None,
+        help=(
+            "Optional pattern(s): constraint-ledger | contrastive-clarify | exemplar-propose | "
+            "override-hook | state-bag | slot-filling (comma-separated to combine)"
+        ),
+    ),
     ascii_only: bool = typer.Option(False, "--ascii", help="Emit ASCII-only output"),
     json_out: bool = typer.Option(False, "--json", help="Return machine-readable JSON"),
 ) -> None:
-    """Generate a single iterate card (Diagnosis -> Fix -> Validation)."""
+    """Generate an Iterate Card (Diagnosis -> Fix -> Validation; includes Human summary, placement, and Model considerations)."""
 
     card = make_iterate_card(seed, friction, ascii_only=ascii_only, pattern=pattern)
     if json_out:
@@ -68,7 +79,9 @@ def ticket(
     real_problem: str = typer.Option(None, help="What is failing in production"),
     test_problem: str = typer.Option(None, help="What this validates about PromptKit"),
     goal: str = typer.Option(None, help="What success looks like"),
-    success: list[str] = typer.Option(None, "--success", help="Add success criterion (repeatable)"),
+    success: list[str] = typer.Option(  # noqa: B008
+        None, "--success", help="Add success criterion (repeatable)"
+    ),
     ascii_only: bool = typer.Option(False, "--ascii", help="Emit ASCII-only output"),
 ) -> None:
     """Print a PromptKit ticket (template filled from args)."""

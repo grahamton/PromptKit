@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterable, List, Optional
+from typing import Iterable, Optional
 
 
 def _ascii(text: str, enabled: bool) -> str:
@@ -28,10 +28,7 @@ def build_ticket_text(
     ascii_only: bool = False,
 ) -> str:
     client_line = client or "<client>"
-    brief_line = (
-        prompt_brief
-        or f"Write or refine a conversational objective for: {seed}"
-    )
+    brief_line = prompt_brief or f"Write or refine a conversational objective for: {seed}"
     real_line = real_problem or f"Observed failure: {friction}"
     test_line = (
         test_problem
@@ -43,7 +40,7 @@ def build_ticket_text(
     )
 
     if success:
-        success_list: List[str] = list(success)
+        success_list: list[str] = list(success)
     else:
         success_list = [
             "Echo captured constraints; never contradict them",
@@ -51,7 +48,7 @@ def build_ticket_text(
             "Provide a recap and explicit confirmation before finalizing",
         ]
 
-    lines: List[str] = []
+    lines: list[str] = []
     lines.append("Client: " + client_line)
     lines.append("Prompt Brief: " + brief_line)
     lines.append("Real Problem: " + real_line)
@@ -64,4 +61,3 @@ def build_ticket_text(
         lines.append("- " + s)
     text = "\n".join(lines) + "\n"
     return _ascii(text, ascii_only)
-

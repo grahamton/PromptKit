@@ -95,6 +95,8 @@ Print a filled PromptKit ticket to frame work quickly.
 - state-bag: Keep explicit state (goal/include/avoid/not_too/memory/next_step/confirmed); echo updates; confirm before finalizing.
 - slot-filling: Ask only for missing required fields; echo and confirm summary before actions.
 
+Advisory: pattern outputs include a short "Model considerations" section (guidance only) to help keep rules atomic, echoed succinctly, and consistently placed.
+
 See also: Why These Patterns? (run the UI at `http://localhost:8000` and open `/research`).
 
 ## Notes

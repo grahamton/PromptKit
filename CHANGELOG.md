@@ -6,6 +6,18 @@ The format is based on Keep a Changelog, and this project adheres to Semantic Ve
 
 ## [Unreleased]
 
+## [0.0.2] - 2025-11-04
+
+- infra: CI workflow (ruff, black --check, pytest) on push/PR
+- tests: CLI smoke tests (Typer) and core ASCII tests
+- chore: CODEOWNERS default to @grahamton
+- feat(web): Pattern info bubble with explanations; local HTMX; copy buttons; loading indicator
+- feat(web): Compare view (flagged), research page (`/research`), modes page (`/modes`)
+- feat(web): Presets (Bard, Chef, Roomba, Weather, TravelMate)
+- feat(core): New patterns (`state-bag`, `slot-filling`); combined patterns; advisory model considerations
+- feat(core): Human summary + �?oWhere to place in your prompt�?? sections in Iterate Card
+- docs: README/CLI help updated with new patterns
+- infra: `/health` endpoint; session download (JSON)
  - infra: CI workflow (ruff, black --check, pytest) on push/PR
  - tests: CLI smoke tests (Typer) and core ASCII tests
  - chore: CODEOWNERS default to @grahamton

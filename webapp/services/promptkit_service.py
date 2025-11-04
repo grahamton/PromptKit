@@ -69,4 +69,3 @@ def run_promptkit(
         return {"text": text, "json": None, "filename_hint": "ticket"}
 
     raise ValueError(f"Unsupported mode: {mode}")
-

@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Optional, Tuple
-
 
 def _ascii(text: str, enabled: bool) -> str:
     if not enabled:
@@ -15,16 +13,18 @@ def _ascii(text: str, enabled: bool) -> str:
     )
 
 
-def _pattern_summary(pattern: Optional[str]) -> Tuple[str, str]:
+def _pattern_summary(pattern: str | None) -> tuple[str, str]:
     key = (pattern or "").strip().lower()
     if key in {"constraint-ledger", "ledger", "constraint_ledger"}:
         change = (
-            "Keep a Constraint Ledger (include/avoid/not-too/vibes), echo after each capture, and confirm before mixing"
+            "Keep a Constraint Ledger (include/avoid/not-too/vibes), echo after each capture, "
+            "and confirm before mixing"
         )
         benefit = "prevents contradictions and preserves user intent"
     elif key in {"contrastive-clarify", "contrastive", "clarify"}:
         change = (
-            "Use a single contrastive clarifier for ambiguous terms, reflect the choice, then proceed"
+            "Use a single contrastive clarifier for ambiguous terms, reflect the choice, "
+            "then proceed"
         )
         benefit = "reduces guessing and keeps momentum"
     elif key in {"exemplar-propose", "exemplar", "propose"}:
@@ -34,13 +34,12 @@ def _pattern_summary(pattern: Optional[str]) -> Tuple[str, str]:
         benefit = "anchors vague requests without long back-and-forth"
     elif key in {"override-hook", "override", "hook"}:
         change = (
-            "Add simple staff commands (override/lock/reduce/reset) that apply immediately and are echoed"
+            "Add simple staff commands (override/lock/reduce/reset) that apply immediately "
+            "and are echoed"
         )
         benefit = "enables fast corrections without restarting the flow"
     else:
-        change = (
-            "Introduce lightweight rules: keep constraints, ask only to resolve gaps, and confirm before acting"
-        )
+        change = "Introduce lightweight rules: keep constraints, ask only to resolve gaps, and confirm before acting"
         benefit = "turns ambiguous input into reliable actions"
     return change, benefit
 
@@ -49,18 +48,13 @@ def build_plan_text(
     seed: str,
     friction: str,
     *,
-    pattern: Optional[str] = None,
+    pattern: str | None = None,
     ascii_only: bool = False,
 ) -> str:
     change, benefit = _pattern_summary(pattern)
 
-    context = (
-        f"Seed: {seed}\n"
-        f"Observed issue: {friction}"
-    )
-    objective = (
-        "Guide the assistant to interpret natural speech reliably and reach a confirmed outcome without repetition."
-    )
+    context = f"Seed: {seed}\n" f"Observed issue: {friction}"
+    objective = "Guide the assistant to interpret natural speech reliably and reach a confirmed outcome without repetition."
 
     flow = (
         "1. Problem statement: The assistant sounds friendly but misreads intent from vague wording.\n"
@@ -81,9 +75,7 @@ def build_plan_text(
         f"6. Insight: Simple rules -> better matches and faster closes."
     )
 
-    output = (
-        "Clear recap of constraints, one concise clarifier if needed, two fitting options or direct next step, and a confirmation before finalizing."
-    )
+    output = "Clear recap of constraints, one concise clarifier if needed, two fitting options or direct next step, and a confirmation before finalizing."
 
     template = (
         "Context\n"
@@ -104,4 +96,3 @@ def build_plan_text(
     )
 
     return _ascii(template, ascii_only).strip() + "\n"
-

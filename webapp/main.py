@@ -25,12 +25,8 @@ def index(request: Request, preset: Optional[str] = None) -> HTMLResponse:
     friction = ""
     pattern = ""
     if preset == "snacks":
-        seed = (
-            "SnackSmith flavor assistant helps build custom snacks from natural-language taste descriptions."
-        )
-        friction = (
-            "Misinterprets adjectives; mixes mismatched flavors; lacks constraints memory; no fast staff override."
-        )
+        seed = "SnackSmith flavor assistant helps build custom snacks from natural-language taste descriptions."
+        friction = "Misinterprets adjectives; mixes mismatched flavors; lacks constraints memory; no fast staff override."
         pattern = "constraint-ledger"
     elif preset == "bard":
         seed = "Bartholomew the Bard offers epic, 14-line sonnets for mundane household chores."
@@ -50,7 +46,9 @@ def index(request: Request, preset: Optional[str] = None) -> HTMLResponse:
         pattern = "exemplar-propose"
     elif preset == "travelmate":
         seed = "TravelMate planner helps design 7-day city trips based on vibe and budget."
-        friction = "Gives poetic but impractical itineraries; ignores budget and timing constraints."
+        friction = (
+            "Gives poetic but impractical itineraries; ignores budget and timing constraints."
+        )
         pattern = "constraint-ledger,exemplar-propose"
 
     # Feature flags via env or query string (?flags=compare,wizard,feedback)
@@ -58,8 +56,10 @@ def index(request: Request, preset: Optional[str] = None) -> HTMLResponse:
     qs_flags = {k.strip().lower() for k in raw_flags.split(",") if k.strip()}
     flags = {
         "wizard": os.getenv("PK_UI_WIZARD", "0") in {"1", "true", "True"} or ("wizard" in qs_flags),
-        "compare": os.getenv("PK_UI_COMPARE", "0") in {"1", "true", "True"} or ("compare" in qs_flags),
-        "feedback": os.getenv("PK_UI_FEEDBACK", "0") in {"1", "true", "True"} or ("feedback" in qs_flags),
+        "compare": os.getenv("PK_UI_COMPARE", "0") in {"1", "true", "True"}
+        or ("compare" in qs_flags),
+        "feedback": os.getenv("PK_UI_FEEDBACK", "0") in {"1", "true", "True"}
+        or ("feedback" in qs_flags),
     }
 
     # Canonical flags string for preserving in links
@@ -166,8 +166,10 @@ def run(
     qs_flags = {k.strip().lower() for k in raw_flags.split(",") if k.strip()}
     flags = {
         "wizard": os.getenv("PK_UI_WIZARD", "0") in {"1", "true", "True"} or ("wizard" in qs_flags),
-        "compare": os.getenv("PK_UI_COMPARE", "0") in {"1", "true", "True"} or ("compare" in qs_flags),
-        "feedback": os.getenv("PK_UI_FEEDBACK", "0") in {"1", "true", "True"} or ("feedback" in qs_flags),
+        "compare": os.getenv("PK_UI_COMPARE", "0") in {"1", "true", "True"}
+        or ("compare" in qs_flags),
+        "feedback": os.getenv("PK_UI_FEEDBACK", "0") in {"1", "true", "True"}
+        or ("feedback" in qs_flags),
     }
 
     compare_payload = None
@@ -239,7 +241,7 @@ def run(
 @app.post("/download/text")
 def download_text(filename: str = Form("output.txt"), content: str = Form("")) -> Response:
     fname = filename if filename else "output.txt"
-    headers = {"Content-Disposition": f"attachment; filename=\"{fname}\""}
+    headers = {"Content-Disposition": f'attachment; filename="{fname}"'}
     return Response(content=content, media_type="text/plain; charset=utf-8", headers=headers)
 
 
@@ -252,7 +254,7 @@ def download_json(filename: str = Form("output.json"), content: str = Form("{}")
         body = json.dumps(data, ensure_ascii=False, indent=2)
     except Exception:
         body = content
-    headers = {"Content-Disposition": f"attachment; filename=\"{fname}\""}
+    headers = {"Content-Disposition": f'attachment; filename="{fname}"'}
     return Response(content=body, media_type="application/json; charset=utf-8", headers=headers)
 
 

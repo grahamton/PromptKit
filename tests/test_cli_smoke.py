@@ -63,4 +63,3 @@ def test_iterate_command_runs():
     )
     assert res.exit_code == 0
     assert "Iterate Card" in res.stdout
-

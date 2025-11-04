@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import List, Optional
 
 
 @dataclass
@@ -9,21 +8,23 @@ class IterateCard:
     id: str
     seed: str
     friction: str
-    diagnosis: List[str]
-    fix_rules: List[str]
-    prompt_patch: List[str]
-    examples: List[str]
-    validation_scenarios: List[str]
-    validation_pass: List[str]
-    model_considerations: List[str] = field(default_factory=list)
+    diagnosis: list[str]
+    fix_rules: list[str]
+    prompt_patch: list[str]
+    examples: list[str]
+    validation_scenarios: list[str]
+    validation_pass: list[str]
+    model_considerations: list[str] = field(default_factory=list)
 
     def render_text(self) -> str:
-        lines: List[str] = []
+        lines: list[str] = []
         lines.append(f"Iterate Card - {self.id}")
         # Human summary (deterministic): compress fix rules into a terse line
         if self.fix_rules:
+
             def _strip(s: str) -> str:
-                return s.strip().strip('"').rstrip('.')
+                return s.strip().strip('"').rstrip(".")
+
             summary = "; ".join(_strip(r) for r in self.fix_rules)
             lines.append("- Human summary")
             lines.append(f"  - {summary}.")
@@ -36,23 +37,47 @@ class IterateCard:
         lines.append("- Prompt patch (drop-in)")
         for p in self.prompt_patch:
             lines.append(f"  - {p}")
+
         # Where to place in your prompt (heuristic grouping)
         def _section_for(p: str) -> str:
             low = p.lower()
             if any(k in low for k in ["state bag", "ledger", "state:", "constraint ledger"]):
                 return "State/Memory"
-            if any(k in low for k in ["override:", "lock:", "reduce:", "reset", "recognize commands", "override"]):
+            if any(
+                k in low
+                for k in [
+                    "override:",
+                    "lock:",
+                    "reduce:",
+                    "reset",
+                    "recognize commands",
+                    "override",
+                ]
+            ):
                 return "Overrides"
             if any(k in low for k in ["contrast", "clarif", "either/or", "ambiguous"]):
                 return "Clarifiers"
             if any(k in low for k in ["offer two options", "option a", "option b", "exemplar"]):
                 return "Interaction/Output"
             return "Rules/Policy"
-        placement: dict[str, List[str]] = {"Rules/Policy": [], "State/Memory": [], "Clarifiers": [], "Overrides": [], "Interaction/Output": []}
+
+        placement: dict[str, list[str]] = {
+            "Rules/Policy": [],
+            "State/Memory": [],
+            "Clarifiers": [],
+            "Overrides": [],
+            "Interaction/Output": [],
+        }
         for p in self.prompt_patch:
             placement[_section_for(p)].append(p)
         lines.append("- Where to place in your prompt")
-        for sec in ["Rules/Policy", "State/Memory", "Clarifiers", "Overrides", "Interaction/Output"]:
+        for sec in [
+            "Rules/Policy",
+            "State/Memory",
+            "Clarifiers",
+            "Overrides",
+            "Interaction/Output",
+        ]:
             if placement[sec]:
                 lines.append(f"  - {sec}")
                 for p in placement[sec]:
@@ -93,6 +118,7 @@ def _matches_close_loop(friction: str) -> bool:
 
 # ---- Pattern builders (no scoring) ----
 
+
 def build_constraint_ledger(seed: str, friction: str) -> IterateCard:
     id_ = "Constraint Ledger"
     diagnosis = [
@@ -112,7 +138,8 @@ def build_constraint_ledger(seed: str, friction: str) -> IterateCard:
         '"Before committing, recap ledger and ask: Did I capture this right?"',
     ]
     examples = [
-        "Heard: bold vibe, not too spicy, buttery. Ledger: include[buttery], avoid[chili], not_too[spicy], vibes[bold]. Did I capture this right?",
+        "Heard: bold vibe, not too spicy, buttery. Ledger: include[buttery], avoid[chili], "
+        "not_too[spicy], vibes[bold]. Did I capture this right?",
     ]
     validation_scenarios = [
         "'Bold not too spicy' -> ledger avoids heat, keeps richness; confirm",
@@ -134,6 +161,10 @@ def build_constraint_ledger(seed: str, friction: str) -> IterateCard:
         examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Keep recaps under two lines; avoid restating rules",
+            "Use section headers to enforce output shape",
+        ],
     )
 
 
@@ -164,11 +195,19 @@ def build_contrastive_clarify(seed: str, friction: str) -> IterateCard:
         "Reflected choice appears before next step",
     ]
     return IterateCard(
-        id=id_, seed=seed, friction=friction,
-        diagnosis=diagnosis, fix_rules=fix_rules,
-        prompt_patch=prompt_patch, examples=examples,
+        id=id_,
+        seed=seed,
+        friction=friction,
+        diagnosis=diagnosis,
+        fix_rules=fix_rules,
+        prompt_patch=prompt_patch,
+        examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Use domain-specific contrasts; avoid stacking clarifiers",
+            "Reflect the chosen meaning before next step",
+        ],
     )
 
 
@@ -199,11 +238,19 @@ def build_exemplar_propose(seed: str, friction: str) -> IterateCard:
         "Choice captured and reflected before action",
     ]
     return IterateCard(
-        id=id_, seed=seed, friction=friction,
-        diagnosis=diagnosis, fix_rules=fix_rules,
-        prompt_patch=prompt_patch, examples=examples,
+        id=id_,
+        seed=seed,
+        friction=friction,
+        diagnosis=diagnosis,
+        fix_rules=fix_rules,
+        prompt_patch=prompt_patch,
+        examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Keep options to 3-4 traits; avoid long paragraphs",
+            "Ensure both options respect captured constraints",
+        ],
     )
 
 
@@ -234,11 +281,19 @@ def build_override_hook(seed: str, friction: str) -> IterateCard:
         "No contradictions with active overrides",
     ]
     return IterateCard(
-        id=id_, seed=seed, friction=friction,
-        diagnosis=diagnosis, fix_rules=fix_rules,
-        prompt_patch=prompt_patch, examples=examples,
+        id=id_,
+        seed=seed,
+        friction=friction,
+        diagnosis=diagnosis,
+        fix_rules=fix_rules,
+        prompt_patch=prompt_patch,
+        examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Update state atomically and echo succinctly",
+            "Confirm before switching confirmed=false -> true",
+        ],
     )
 
 
@@ -249,19 +304,22 @@ def build_state_bag(seed: str, friction: str) -> IterateCard:
         "Contradictions appear because prior constraints aren't echoed",
     ]
     fix_rules = [
-        "Maintain a State Bag: goal, include[], avoid[], not_too[], memory[], next_step, confirmed=false",
+        "Maintain a State Bag: goal, include[], avoid[], not_too[], "
+        "memory[], next_step, confirmed=false",
         "After each user message, update and echo state succinctly",
         "Ask only to resolve missing/conflicting items; otherwise proceed",
         "Before finalizing, recap state and set confirmed=true on explicit yes",
     ]
     prompt_patch = [
-        '"Maintain State Bag: goal[], include[], avoid[], not_too[], memory[], next_step, confirmed=false."',
+        '"Maintain State Bag: goal[], include[], avoid[], not_too[], '
+        'memory[], next_step, confirmed=false."',
         '"After each user message, update and echo state succinctly."',
         '"Ask only to resolve missing/conflicting items; otherwise proceed."',
         '"Before finalizing, recap state and set confirmed=true on explicit yes."',
     ]
     examples = [
-        "State: goal=custom snack; include[buttery]; avoid[chili]; not_too[spicy]; next_step=propose A/B; confirmed=false.",
+        "State: goal=custom snack; include[buttery]; avoid[chili]; not_too[spicy]; "
+        "next_step=propose A/B; confirmed=false.",
     ]
     validation_scenarios = [
         "Conflict -> one clarifier -> state updated -> proceed",
@@ -272,11 +330,19 @@ def build_state_bag(seed: str, friction: str) -> IterateCard:
         "<=1 clarifier per conflict; explicit confirmation present",
     ]
     return IterateCard(
-        id=id_, seed=seed, friction=friction,
-        diagnosis=diagnosis, fix_rules=fix_rules,
-        prompt_patch=prompt_patch, examples=examples,
+        id=id_,
+        seed=seed,
+        friction=friction,
+        diagnosis=diagnosis,
+        fix_rules=fix_rules,
+        prompt_patch=prompt_patch,
+        examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Ask only for missing fields; never re-ask captured",
+            "Echo a concise summary for confirmation",
+        ],
     )
 
 
@@ -297,7 +363,8 @@ def build_slot_filling(seed: str, friction: str) -> IterateCard:
         '"Echo captured slots; confirm summary before acting."',
     ]
     examples = [
-        "Captured: entity=snack; intent=contrast options; include[buttery]; avoid[chili]; not_too[spicy]. Confirm?",
+        "Captured: entity=snack; intent=contrast options; include[buttery]; "
+        "avoid[chili]; not_too[spicy]. Confirm?",
     ]
     validation_scenarios = [
         "Partial info -> ask only missing -> summary + confirm",
@@ -308,11 +375,19 @@ def build_slot_filling(seed: str, friction: str) -> IterateCard:
         "Summary + confirmation before action",
     ]
     return IterateCard(
-        id=id_, seed=seed, friction=friction,
-        diagnosis=diagnosis, fix_rules=fix_rules,
-        prompt_patch=prompt_patch, examples=examples,
+        id=id_,
+        seed=seed,
+        friction=friction,
+        diagnosis=diagnosis,
+        fix_rules=fix_rules,
+        prompt_patch=prompt_patch,
+        examples=examples,
         validation_scenarios=validation_scenarios,
         validation_pass=validation_pass,
+        model_considerations=[
+            "Keep commands short; echo applied override",
+            "Ensure proposals respect active overrides and ledger",
+        ],
     )
 
 
@@ -320,7 +395,7 @@ def make_iterate_card(
     seed: str,
     friction: str,
     ascii_only: bool = False,
-    pattern: Optional[str] = None,
+    pattern: str | None = None,
 ) -> IterateCard:
     """Construct a deterministic iterate card from seed + friction.
 
@@ -334,7 +409,7 @@ def make_iterate_card(
         raw = pattern.strip().lower()
         keys = [k.strip() for k in raw.replace(" ", "").split(",") if k.strip()]
 
-        def _build_for(k: str) -> Optional[IterateCard]:
+        def _build_for(k: str) -> IterateCard | None:
             if k in {"constraint-ledger", "ledger", "constraint_ledger"}:
                 return build_constraint_ledger(seed, friction)
             if k in {"contrastive-clarify", "contrastive", "clarify"}:
@@ -355,7 +430,8 @@ def make_iterate_card(
             built = [c for k in keys if (c := _build_for(k)) is not None]
             if built:
                 base = built[0]
-                def _merge_unique(a: List[str], b: List[str]) -> List[str]:
+
+                def _merge_unique(a: list[str], b: list[str]) -> list[str]:
                     seen = set(a)
                     out = list(a)
                     for item in b:
@@ -363,13 +439,20 @@ def make_iterate_card(
                             out.append(item)
                             seen.add(item)
                     return out
+
                 for nxt in built[1:]:
                     base.diagnosis = _merge_unique(base.diagnosis, nxt.diagnosis)
                     base.fix_rules = _merge_unique(base.fix_rules, nxt.fix_rules)
                     base.prompt_patch = _merge_unique(base.prompt_patch, nxt.prompt_patch)
                     base.examples = _merge_unique(base.examples, nxt.examples)
-                    base.validation_scenarios = _merge_unique(base.validation_scenarios, nxt.validation_scenarios)
+                    base.validation_scenarios = _merge_unique(
+                        base.validation_scenarios,
+                        nxt.validation_scenarios,
+                    )
                     base.validation_pass = _merge_unique(base.validation_pass, nxt.validation_pass)
+                    base.model_considerations = _merge_unique(
+                        base.model_considerations, nxt.model_considerations
+                    )
                 base.id = "Combined: " + " + ".join(keys)
                 card = base
             else:
@@ -378,6 +461,7 @@ def make_iterate_card(
             card = None
     else:
         card = None
+    extra_considerations: list[str] = []
 
     if card is None and _matches_close_loop(friction):
         id_ = "Close-The-Loop Control"
@@ -395,21 +479,29 @@ def make_iterate_card(
             '"Use at most one apology total."',
             '"Maintain state: issue, next_step, confirmed=false."',
             '"Do not repeat a question unless the user provided new information."',
-            '"Before closing, ask: Did we fully handle this today? If yes -> set confirmed=true and recap next_step. If no -> ask what is missing and address it."',
+            '"Before closing, ask: Did we fully handle this today? If yes -> set confirmed=true '
+            'and recap next_step. If no -> ask what is missing and address it."',
             '"Close with a crisp recap + next step, no filler."',
         ]
         examples = [
-            "Got it -> exchange for size M in black. I'll email the label now. Did we fully handle this today?",
+            "Got it -> exchange for size M in black. I'll email the label now. "
+            "Did we fully handle this today?",
         ]
         validation_scenarios = [
             "Return: user gives order ID -> provide label; ask one confirmation; close on yes",
-            "Exchange (SKU mismatch): propose alternative -> confirm -> recap email/label; no repeated apology",
-            "Policy edge: out-of-window -> one apology + store credit -> confirm acceptance -> close",
+            "Exchange (SKU mismatch): propose alternative -> confirm -> recap email/label; "
+            "no repeated apology",
+            "Policy edge: out-of-window -> one apology + store credit -> "
+            "confirm acceptance -> close",
         ]
         validation_pass = [
             "<= 1 apology; no repeated identical questions",
             "Contains explicit confirmation and final recap",
             "Turns to resolution decrease or stay flat vs baseline",
+        ]
+        extra_considerations = [
+            "Limit apologies; avoid repeated questions",
+            "Confirm resolution explicitly; recap next step",
         ]
     elif card is None:
         id_ = "Smart Info Capture"
@@ -430,7 +522,8 @@ def make_iterate_card(
             '"Before proceeding, recap the captured info and confirm."',
         ]
         examples = [
-            "Thanks -> order 12345, item is blue jacket, exchange to M. Missing: return reason. What's the reason?",
+            "Thanks -> order 12345, item is blue jacket, exchange to M. Missing: return reason. "
+            "What's the reason?",
         ]
         validation_scenarios = [
             "Direct exchange -> all fields captured -> single confirm",
@@ -441,6 +534,10 @@ def make_iterate_card(
             "No redundant re-asks; missing-only questions",
             "Single recap + confirmation before next step",
             "Lower average turns vs baseline",
+        ]
+        extra_considerations = [
+            "Ask only for missing fields; avoid repeats",
+            "Summarize captured info before proceeding",
         ]
 
     # Prepare the final card object if not chosen earlier
@@ -455,20 +552,30 @@ def make_iterate_card(
             examples=examples,
             validation_scenarios=validation_scenarios,
             validation_pass=validation_pass,
+            model_considerations=extra_considerations,
         )
 
     # ASCII safety: normalize dashes if requested
     if ascii_only:
-        def _norm(xs: List[str]) -> List[str]:
-            out: List[str] = []
+
+        def _norm(xs: list[str]) -> list[str]:
+            out: list[str] = []
             for s in xs:
-                out.append(s.replace("–", "-").replace("—", "-").replace("“", '"').replace("”", '"').replace("’", "'"))
+                out.append(
+                    s.replace("–", "-")
+                    .replace("—", "-")
+                    .replace("“", '"')
+                    .replace("”", '"')
+                    .replace("’", "'")
+                )
             return out
+
         card.diagnosis = _norm(card.diagnosis)
         card.fix_rules = _norm(card.fix_rules)
         card.prompt_patch = _norm(card.prompt_patch)
         card.examples = _norm(card.examples)
         card.validation_scenarios = _norm(card.validation_scenarios)
         card.validation_pass = _norm(card.validation_pass)
+        card.model_considerations = _norm(card.model_considerations)
 
     return card
