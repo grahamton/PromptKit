@@ -1,6 +1,19 @@
-﻿# PromptKit
+# PromptKit: The Prompt System Diagnostics Framework
 
-PromptKit: The Prompt System Diagnostics Framework. Stop guessing and start fixing by diagnosing root causes and standardizing validated fixes.
+Stop guessing and start fixing by diagnosing root causes and standardizing validated fixes.
+
+Prompt engineers, product managers, and ops teams waste time on trial-and-error prompt tuning and can’t explain why a change worked. **PromptKit** solves this by explaining *why* each prompt change is made, providing clear, testable, and reusable artifacts.
+
+## Key Benefits
+
+* **Root-Cause Clarity:** See the exact mismatch between your prompt's goal and the model's actual behavior to surface breakdowns in reasoning, tone, grounding, pacing, and success checks.
+* **Actionable, Standardized Fixes:** Every fix is a reusable, testable artifact (**Iterate Card**) with a clear diagnosis, rules to drop into your prompt, and validation scenarios.
+* **Story-Ready Plans:** Generate one-page summaries (**Plan**) that explain the causal reasoning chain behind a change for stakeholders.
+* **Seamless Team Handoffs:** Use filled **Tickets** and the PowerShell runner to empower PMs, ops, or subject-matter experts to self-serve prompt improvements.
+
+---
+
+Would you like to see how to format the "How It Works" or "Commands" sections next?
 
 ## Overview
 PromptKit helps you improve prompts by explaining why each change is made. For prompt engineers, product managers, and ops teams who waste time on trial-and-error prompt tuning and can’t explain why a change worked. It outputs small, deterministic artifacts:
