@@ -11,10 +11,6 @@ Prompt engineers, product managers, and ops teams waste time on trial-and-error 
 * **Story-Ready Plans:** Generate one-page summaries (**Plan**) that explain the causal reasoning chain behind a change for stakeholders.
 * **Seamless Team Handoffs:** Use filled **Tickets** and the PowerShell runner to empower PMs, ops, or subject-matter experts to self-serve prompt improvements.
 
----
-
-Would you like to see how to format the "How It Works" or "Commands" sections next?
-
 ## Overview
 PromptKit helps you improve prompts by explaining why each change is made. For prompt engineers, product managers, and ops teams who waste time on trial-and-error prompt tuning and can’t explain why a change worked. It outputs small, deterministic artifacts:
 - Iterate Card: Diagnosis -> Fix -> Validation
