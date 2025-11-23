@@ -47,7 +47,7 @@ PromptKit helps you improve prompts by explaining why each change is made. For p
 - Install dev tools: `python -m pip install -e .[dev]`
 - Lint: `ruff check .`
 - Format check: `black --check .` (format with `black .`)
-- Tests: `pytest -q`
+- Tests: `pytest -q` or `./dev-test.ps1` on Windows (creates venv, installs deps, runs tests)
 - Run CLI locally:
   - `promptkit plan --seed "demo" --friction "demo" --ascii`
   - `promptkit ticket --seed "demo" --friction "demo" --ascii`
@@ -67,15 +67,16 @@ PromptKit helps you improve prompts by explaining why each change is made. For p
   - Env: `PK_UI_COMPARE=1`, `PK_UI_FEEDBACK=1`
 - Useful routes: `/modes`, `/research`, `/health`
 - Presets: SnackSmith, Bard, Chef, Roomba, Weather, TravelMate
-- Features: copy/download, Compare (flag), Download Session/Feedback (no telemetry)
+- Features: Markdown-rendered output, copy/download, Compare (flag), Download Session/Feedback (no telemetry)
 
 ## Commands
 ### iterate
 Generate a single Iterate Card from a seed and a friction point.
 - Usage:
-  - `promptkit iterate --seed "..." --friction "..." [--pattern <name>[,<name>...]] [--ascii] [--json]`
-- Patterns (no scoring): `constraint-ledger`, `contrastive-clarify`, `exemplar-propose`, `override-hook`, `state-bag`, `slot-filling`
+  - `promptkit iterate --seed "..." --friction "..." [--pattern <name>[,<name>...]|auto] [--ascii] [--json]`
+- Patterns (no scoring): `constraint-ledger`, `contrastive-clarify`, `exemplar-propose`, `override-hook`, `state-bag`, `slot-filling`, `forced-diversification`
 - Combine patterns by comma to merge behaviors deterministically.
+- Auto-select: pass `--pattern auto` (or leave Pattern blank in the UI) to choose one or two patterns from cues in your Friction text.
 - Example (SnackSmith):
   - `promptkit iterate --seed "SnackSmith flavor assistant helps build custom snacks from natural-language taste descriptions." --friction "Misinterprets adjectives; mixes mismatched flavors; lacks constraints memory; no fast staff override." --pattern constraint-ledger --ascii`
  - Example (Combined):
@@ -103,6 +104,7 @@ Print a filled PromptKit ticket to frame work quickly.
 - override-hook: Simple staff commands (override/lock/reduce/reset); apply immediately and echo.
 - state-bag: Keep explicit state (goal/include/avoid/not_too/memory/next_step/confirmed); echo updates; confirm before finalizing.
 - slot-filling: Ask only for missing required fields; echo and confirm summary before actions.
+- forced-diversification: Extract 3+ non-primary interests; output two labeled recs (Balanced, Novelty) to counter feed/echo bias.
 
 Advisory: pattern outputs include a short "Model considerations" section (guidance only) to help keep rules atomic, echoed succinctly, and consistently placed.
 
@@ -144,7 +146,7 @@ Troubleshooting
 See the step-by-step business guide: `GUIDE_BUSINESS.md`.
 
 ## Demo Playbook
-- Want to show PromptKit live? Follow `DEMO_GUIDE.md` for a 5–7 minute walkthrough covering Iterate Card, Plan, Ticket, and the business runner.
+- Want to show PromptKit live? Follow `DEMO_GUIDE.md` for a 5–7 minute walkthrough covering Iterate Card (including `auto` and `forced-diversification`), Plan, Ticket, the web UI (Markdown output), and the business/dev runners.
 
 ## Roadmap
 - Future work (prompt ingestion, model considerations, validation tooling, team workflows) is tracked in `ROADMAP.md`.

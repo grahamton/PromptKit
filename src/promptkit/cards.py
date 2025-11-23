@@ -254,6 +254,60 @@ def build_exemplar_propose(seed: str, friction: str) -> IterateCard:
     )
 
 
+def build_forced_diversification(seed: str, friction: str) -> IterateCard:
+    id_ = "Forced Diversification"
+    diagnosis = [
+        "Recommendations over-index on one domain and mirror feed bias",
+        "No explicit extraction of cross-domain interests; missing coverage target",
+        "Formatter lacks labeled options to enforce diversity",
+    ]
+    fix_rules = [
+        "Extract at least 3 non-primary interests; classify by life domain",
+        "Output two labeled recs: Balanced Option and Novelty Option",
+        "Map each option to a specific non-primary interest with one-line justification",
+        "Do not treat sub-genres of the primary domain as 'non-domain'",
+        "If <3 interests found, infer proxies and state assumptions",
+    ]
+    prompt_patch = [
+        '"Extract a minimum of three distinct interests outside the dominant domain."',
+        '"Classify them by life domain (hobbies, aesthetics, media, values, profession) and list them explicitly."',
+        '"Then produce exactly two recommendations:"',
+        '"1) Balanced Option - combine the primary domain motif with one selected non-domain interest."',
+        '"2) Novelty Option - primarily showcase one non-domain interest; keep the primary motif minimal."',
+        '"For each option, include: Name; Colorway/format rationale; Interest mapping; One-sentence justification."',
+        '"Constraints: do not treat sub-genres of the primary domain as non-domain; avoid lewd/violent themes; ensure the two options are meaningfully different."',
+        '"If fewer than three interests are detected, infer proxies from profile categories and state assumptions explicitly."',
+    ]
+    examples = [
+        "Balanced Option - blend a core motif with an external interest; Novelty Option - spotlight a single external interest",
+    ]
+    validation_scenarios = [
+        "Dominant-domain profile with mixed signals -> surfaces 3+ non-domain interests",
+        "Sparse profile -> proxies inferred, assumptions stated",
+        "Conflicting interests -> two distinct, coherent options",
+    ]
+    validation_pass = [
+        "Output contains 'Balanced Option' and 'Novelty Option' labels",
+        "At least three non-domain interests listed before recommendations",
+        "Each option maps to a non-domain interest and includes a one-line justification",
+        "Options are meaningfully distinct; neither is primary-domain-only",
+    ]
+    return IterateCard(
+        id=id_,
+        seed=seed,
+        friction=friction,
+        diagnosis=diagnosis,
+        fix_rules=fix_rules,
+        prompt_patch=prompt_patch,
+        examples=examples,
+        validation_scenarios=validation_scenarios,
+        validation_pass=validation_pass,
+        model_considerations=[
+            "Use headings to enforce labeled sections (interests list + two options)",
+            "Favor concise, concrete rationales over generic descriptions",
+        ],
+    )
+
 def build_override_hook(seed: str, friction: str) -> IterateCard:
     id_ = "Override Hook"
     diagnosis = [
@@ -407,7 +461,11 @@ def make_iterate_card(
     # Explicit pattern selection (no scoring). Supports comma-separated combos.
     if pattern:
         raw = pattern.strip().lower()
-        keys = [k.strip() for k in raw.replace(" ", "").split(",") if k.strip()]
+        # Auto strategy: local rules to pick one or two patterns
+        if raw in {"auto", "auto-remote"}:
+            keys, _why, _conf = select_patterns(seed, friction)
+        else:
+            keys = [k.strip() for k in raw.replace(" ", "").split(",") if k.strip()]
 
         def _build_for(k: str) -> IterateCard | None:
             if k in {"constraint-ledger", "ledger", "constraint_ledger"}:
@@ -416,6 +474,8 @@ def make_iterate_card(
                 return build_contrastive_clarify(seed, friction)
             if k in {"exemplar-propose", "exemplar", "propose"}:
                 return build_exemplar_propose(seed, friction)
+            if k in {"forced-diversification", "diversify", "coverage", "balanced-novelty"}:
+                return build_forced_diversification(seed, friction)
             if k in {"override-hook", "override", "hook"}:
                 return build_override_hook(seed, friction)
             if k in {"state-bag", "state", "bag"}:
@@ -579,3 +639,36 @@ def make_iterate_card(
         card.model_considerations = _norm(card.model_considerations)
 
     return card
+
+
+def select_patterns(seed: str, friction: str) -> tuple[list[str], str, float]:
+    """Local rules to select patterns from cues in seed/friction.
+
+    Returns (pattern_ids, rationale, confidence).
+    """
+    text = f"{seed}\n{friction}".lower()
+    rules: list[tuple[str, set[str]]] = [
+        ("constraint-ledger", {"constraint", "ledger", "recap", "confirm", "include", "avoid"}),
+        ("contrastive-clarify", {"ambiguous", "either/or", "clarify", "contrast"}),
+        ("exemplar-propose", {"two options", "option a", "option b", "example", "exemplar"}),
+        ("override-hook", {"override", "lock", "reduce", "reset"}),
+        ("state-bag", {"state:", "memory", "next_step", "confirmed", "drift"}),
+        ("slot-filling", {"missing field", "required", "re-ask", "form"}),
+        ("forced-diversification", {"bias", "over-index", "diverse", "coverage", "echo chamber", "feed"}),
+    ]
+    hits: dict[str, int] = {}
+    for pid, cues in rules:
+        score = sum(1 for cue in cues if cue in text)
+        if score:
+            hits[pid] = score
+
+    if not hits:
+        return (["constraint-ledger"], "fallback: no cues matched", 0.3)
+
+    ordered = sorted(hits.items(), key=lambda kv: kv[1], reverse=True)
+    top_ids = [pid for pid, _ in ordered[:2]]
+    total_cues = sum(hits.values())
+    max_possible = sum(len(cues) for _, cues in rules)
+    confidence = min(1.0, max(0.5, total_cues / max_possible * 3))
+    rationale = f"matched cues -> {ordered}"
+    return (top_ids, rationale, confidence)
